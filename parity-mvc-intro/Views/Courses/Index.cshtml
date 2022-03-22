@@ -1,0 +1,44 @@
+﻿@model List<parity_mvc_intro.Models.Course>
+
+@{
+    ViewBag.Title = "View";
+}
+
+<div class="row">
+    @if (TempData["registration_success"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            Successfully registered for <b>@TempData["registration_success"]</b>
+        </div>
+    }
+</div>
+
+<div class="row">
+    <h3>Available Classes</h3>
+</div>
+
+<div class="row">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Course Id</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var course in Model)
+                {
+                    <tr>
+                        <td><a>@Html.Raw(course.Name)</a></td>
+                        <td>@Html.Raw(string.Format("{0} {1}", course.Category, course.Code))</td>
+                        <td>@Html.ActionLink("Register", "Register", new { id = course.Id, courseName = course.Name })</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+

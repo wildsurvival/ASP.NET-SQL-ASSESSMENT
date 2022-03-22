@@ -1,0 +1,83 @@
+﻿@model parity_mvc_intro.Models.Student
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="row">
+    @if (TempData["login_success"] != null)
+    {
+        bool success = (bool)TempData["login_success"];
+
+        if (success == true)
+        {
+            <div class="alert alert-success" role="alert">
+                Login successful!
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-danger" role="alert">
+                Sorry! The email/ password you used was incorrect.
+            </div>
+        }
+    }
+
+    @if (TempData["drop_success"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            Successfully dropped <b>@TempData["registration_success"]</b>
+        </div>
+    }
+</div>
+
+@if (Session["ActiveUserId"] == null)
+{
+    <div class="row">
+        <div class="col">
+            @using (Html.BeginForm("LogIn", "Home", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", id = "email", placeholder = "Enter email" })
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", id = "password", placeholder = "Enter password" })
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            }
+        </div>
+    </div>
+    <div class="row" style="padding-top: 1rem;"><i>Test login information</i> - <b>Email</b>: test@test.com / <b>Password</b>: test</div>
+}
+else
+{
+    <div class="row">
+        <h3>Enrolled Classes</h3>
+    </div>
+
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Course Id</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var course in Model.Courses)
+                { 
+                    <tr>
+                        <td><a>@Html.Raw(course.Name)</a></td>
+                        <td>@Html.Encode(string.Format("{0} {1}", course.Category, course.Code))</td>
+                        <td>@Html.ActionLink("Drop", "Drop", "Courses", new { id = course.Id, courseName = course.Name }, null)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
